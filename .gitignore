@@ -1,0 +1,7 @@
+node_modules/
+dist/
+packages/apidock/ui-dist/
+.apidock/
+*.log
+.DS_Store
+coverage/

@@ -1,0 +1,20 @@
+{
+  "name": "apidock-monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.10.1",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "build": "pnpm --filter @apidock/ui build && pnpm --filter apidock build",
+    "test": "pnpm --filter apidock test",
+    "typecheck": "pnpm -r typecheck",
+    "dev": "pnpm --filter @apidock/demo dev",
+    "dev:ui": "pnpm --filter @apidock/ui dev"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.4",
+    "typescript": "6.0.3"
+  }
+}

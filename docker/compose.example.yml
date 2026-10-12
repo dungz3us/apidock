@@ -1,0 +1,46 @@
+# Example: ApiDock running alongside a real API in "standalone" mode.
+#
+#   docker compose -f docker/compose.example.yml up
+#
+# Then open http://localhost:4000/ (basic auth: dev / dev).
+services:
+  demo-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.demo
+    ports:
+      - '3000:3000'
+
+  apidock:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - '4000:4000'
+    environment:
+      # The spec to document/mock/test. Can be a URL (polled every --refresh) or a file in the volume.
+      APIDOCK_SPEC: http://demo-api:3000/openapi.json
+      APIDOCK_AUTH: dev:dev
+      APIDOCK_REFRESH: 15s
+      # Hosts the request proxy may call. The spec origin is always allowed;
+      # add staging hosts or mock services here.
+      APIDOCK_ALLOW_HOSTS: demo-api:3000
+    volumes:
+      - apidock-data:/data
+    command:
+      - serve
+      - --spec
+      - ${APIDOCK_SPEC}
+      - --port
+      - '4000'
+      - --data
+      - /data
+      - --refresh
+      - ${APIDOCK_REFRESH}
+      - --auth
+      - ${APIDOCK_AUTH}
+    depends_on:
+      - demo-api
+
+volumes:
+  apidock-data:
